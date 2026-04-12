@@ -2,18 +2,20 @@
 
 Describe "Get-APlaAudio" {
 	BeforeAll {
-		# Ensure module is loaded
 		Import-Module "$moduleRoot\andrewplaclips\andrewplaclips.psd1" -Force
 
-		# Create a temporary data directory with fake wav files for testing
-		$script:tempDataDir = Join-Path -Path $TestDrive -ChildPath 'data'
-		New-Item -Path $script:tempDataDir -ItemType Directory -Force | Out-Null
-		New-Item -Path (Join-Path $script:tempDataDir 'GG.wav') -ItemType File -Force | Out-Null
-		New-Item -Path (Join-Path $script:tempDataDir 'bait.wav') -ItemType File -Force | Out-Null
+		# Create a temporary data directory with fake wav files
+		$testDataDir = Join-Path $TestDrive 'data'
+		New-Item -Path $testDataDir -ItemType Directory -Force | Out-Null
+		New-Item -Path (Join-Path $testDataDir 'GG.wav') -ItemType File -Force | Out-Null
+		New-Item -Path (Join-Path $testDataDir 'bait.wav') -ItemType File -Force | Out-Null
 
-		# Point the module's internal root to TestDrive so Get-APlaAudio picks up the temp files
-		$module = Get-Module andrewplaclips
-		& $module { $script:ModuleRoot = $args[0] } $TestDrive
+		# Point the module's root to TestDrive using Pester v5 InModuleScope
+		$testDriveValue = $TestDrive
+		InModuleScope andrewplaclips -Parameters @{ Root = $testDriveValue } {
+			param($Root)
+			$script:ModuleRoot = $Root
+		}
 	}
 
 	AfterAll {

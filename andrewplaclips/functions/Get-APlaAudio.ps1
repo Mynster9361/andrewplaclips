@@ -13,14 +13,18 @@
 
 	.EXAMPLE
 		Get-APlaAudio
+
 		Returns the base names of all available audio clips.
 
 	.EXAMPLE
 		Get-APlaAudio -AudioName 'FAFOFTW'
+
 		Returns the full path to FAFOFTW.wav.
 	#>
 	[CmdletBinding()]
+	[OutputType([string])]
 	param(
+		[Parameter(Mandatory = $false)]
 		[string]$AudioName
 	)
 

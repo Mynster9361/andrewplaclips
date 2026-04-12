@@ -14,15 +14,18 @@
 
 	.EXAMPLE
 		Invoke-APlaAudio -AudioName 'FAFOFTW'
+
 		Plays the FAFOFTW.wav audio clip.
 
 	.EXAMPLE
 		Get-APlaAudio | ForEach-Object { Invoke-APlaAudio -AudioName $_ }
+
 		Plays every available audio clip in sequence.
 	#>
 	[CmdletBinding()]
+	[OutputType([string])]
 	param(
-		[Parameter(Mandatory)]
+		[Parameter(Mandatory = $true)]
 		[string]$AudioName
 	)
 
