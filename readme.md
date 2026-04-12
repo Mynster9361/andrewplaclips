@@ -27,10 +27,15 @@ Install-Module -Name 'andrewplaclips' -Scope CurrentUser
 ```
 
 Alternatively, if you have trouble getting modules installed:
+Clone the repo
 
 ```powershell
-Invoke-WebRequest 'https://raw.githubusercontent.com/PowershellFrameworkCollective/PSFramework.NuGet/refs/heads/master/bootstrap.ps1' -UseBasicParsing | Invoke-Expression
-Install-PSFModule -Name 'andrewplaclips'
+.\build\psf-build.ps1
+import-Module .\publish\andrewplaclips\
+
+# Run the commands:
+# Get-APlaAudio
+# Invoke-APlaAudio FAFOFTW
 ```
 
 ## Usage
