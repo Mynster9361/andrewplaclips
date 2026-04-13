@@ -24,55 +24,41 @@
 	#>
 	[CmdletBinding()]
 	[OutputType([string])]
-	param()
+	param(
+		[Parameter(Mandatory = $true, Position = 0)]
+		[ArgumentCompleter({ (Get-APlaAudio) })]
+		[string]$AudioName
+	)
 
-	dynamicparam {
-		$audioNames = Get-APlaAudio
-		$validateSet = New-Object System.Management.Automation.ValidateSetAttribute($audioNames)
-		$attributes = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-		$attributes.Add((New-Object System.Management.Automation.ParameterAttribute -Property @{ Mandatory = $true; Position = 0 }))
-		$attributes.Add($validateSet)
-		$dynParam = New-Object System.Management.Automation.RuntimeDefinedParameter('AudioName', [string], $attributes)
-		$paramDict = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-		$paramDict.Add('AudioName', $dynParam)
-		return $paramDict
+	$audioDir = Join-Path -Path $script:ModuleRoot -ChildPath 'data'
+	$audioFile = Join-Path -Path $audioDir -ChildPath "$AudioName.wav"
+	Write-Verbose "Attempting to play audio file: $audioFile"
+
+	if (-not (Test-Path $audioFile)) {
+		throw "Audio file not found: $audioFile"
 	}
 
-	begin {
-		$AudioName = $PSBoundParameters['AudioName']
+	if ($IsMacOS) {
+		try {
+			Write-Verbose "Using 'afplay' to play audio on macOS"
+			afplay $audioFile
+		}
+		catch {
+			throw "Failed to play $audioFile on macOS`: $_"
+		}
+	}
+	else {
+		try {
+			Write-Verbose "Using System.Media.SoundPlayer to play audio on Windows"
+			$player = New-Object System.Media.SoundPlayer
+			$player.SoundLocation = $audioFile
+			$player.Load()
+			$player.PlaySync()
+		}
+		catch {
+			throw "Failed to play $audioFile`: $_"
+		}
 	}
 
-	process {
-		$audioDir = Join-Path -Path $script:ModuleRoot -ChildPath 'data'
-		$audioFile = Join-Path -Path $audioDir -ChildPath "$AudioName.wav"
-		Write-Verbose "Attempting to play audio file: $audioFile"
-
-		if (-not (Test-Path $audioFile)) {
-			throw "Audio file not found: $audioFile"
-		}
-
-		if ($IsMacOS) {
-			try {
-				Write-Verbose "Using 'afplay' to play audio on macOS"
-				afplay $audioFile
-			}
-			catch {
-				throw "Failed to play $audioFile on macOS`: $_"
-			}
-		}
-		else {
-			try {
-				Write-Verbose "Using System.Media.SoundPlayer to play audio on Windows"
-				$player = New-Object System.Media.SoundPlayer
-				$player.SoundLocation = $audioFile
-				$player.Load()
-				$player.PlaySync()
-			}
-			catch {
-				throw "Failed to play $audioFile`: $_"
-			}
-		}
-
-		return "Played: $(Split-Path $audioFile -Leaf)"
-	}
+	return "Played: $(Split-Path $audioFile -Leaf)"
 }
