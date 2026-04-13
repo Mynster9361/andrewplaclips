@@ -1,6 +1,6 @@
 ﻿# Changelog
 
-## 1.0.2 (2026-04-13)
+## 1.0.3 (2026-04-13)
 
 + Add: support for dynamic parameter for invoke-aplaaudio so we can tab complete files dynamicly
 
