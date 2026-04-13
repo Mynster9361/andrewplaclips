@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+## 1.0.4 (2026-04-13)
+
++ Add: Random switch for invoke-aPlaAudio
++ Add: alias for Play-APla and Get-APla
+
 ## 1.0.3 (2026-04-13)
 
 + Add: support for dynamic parameter for invoke-aplaaudio so we can tab complete files dynamicly

@@ -22,6 +22,7 @@
 		Returns the full path to FAFOFTW.wav.
 	#>
 	[CmdletBinding()]
+	[Alias('Get-APla')]
 	[OutputType([string])]
 	param(
 		[Parameter(Mandatory = $false)]
