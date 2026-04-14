@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## 1.0.5 (2026-04-14)
+
++ Fix: Aliases was never exported in the module and hence did not work
+
 ## 1.0.4 (2026-04-13)
 
 + Add: Random switch for invoke-aPlaAudio

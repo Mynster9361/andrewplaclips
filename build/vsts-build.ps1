@@ -63,8 +63,13 @@ Get-ChildItem -Path "$($publishDir.FullName)\andrewplaclips\internal\scripts\" -
 
 # Add Explicit Export Statement (to avoid direct invocation of the .psm1 file giving access to non-exported functions)
 $functionNames = (Get-ChildItem -Path "$($WorkingDirectory)\andrewplaclips\functions" -Filter '*.ps1' -Recurse).BaseName | Sort-Object
+$aliasNames = (Import-PowerShellDataFile -Path "$($WorkingDirectory)\andrewplaclips\andrewplaclips.psd1").AliasesToExport | Sort-Object
 if ($functionNames) {
-	$text += "Export-ModuleMember -Function '$($functionNames -join "','")'"
+	$exportStatement = "Export-ModuleMember -Function '$($functionNames -join "','")'"
+	if ($aliasNames) {
+		$exportStatement += " -Alias '$($aliasNames -join "','")'"
+	}
+	$text += $exportStatement
 }
 
 #region Update the psm1 file & Cleanup
